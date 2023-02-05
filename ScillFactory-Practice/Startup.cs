@@ -35,8 +35,6 @@ namespace ScillFactory_Practice
                     .AddCustomRepository<Article, ArticlesRepository>()
                     .AddCustomRepository<Comment, CommentRepository>()
                     .AddCustomRepository<Tag, TagRepository>();
-
-            services.AddControllersWithViews();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Skillfactory-Practice", Version = "v1" });
@@ -53,6 +51,7 @@ namespace ScillFactory_Practice
                     }
                 };
             });
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

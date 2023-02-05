@@ -20,8 +20,15 @@ namespace ScillFactory_Practice.Controllers
         {
             _repo = repo;
         }
+        [HttpGet]
+        [Route("Authenticate")]
+        public IActionResult Authenticate()
+        {
+            return View();
+        }
+
         [HttpPost]
-        [Route("authenticate")]
+        [Route("Authenticate")]
         public async Task<User> Authenticate(string login, string password)
         {
             if (String.IsNullOrEmpty(login) ||
@@ -37,7 +44,7 @@ namespace ScillFactory_Practice.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login),
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Roles.FirstOrDefault().Name)
             };
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(

@@ -1,0 +1,19 @@
+﻿@{
+   ViewData["Title"] = "View tags";
+}
+ 
+<div class="block-reg background-white">
+    <h4 class="center">Список тегов!</h4>
+   <br>
+       <table>
+           <tr>
+               <td>Название</td>
+           </tr>
+           @foreach (var tag in Model)
+               {
+               <tr>
+                   <td>@tag.Name</td>
+               </tr>
+           }
+       </table>
+</div>

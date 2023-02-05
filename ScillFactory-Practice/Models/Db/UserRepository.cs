@@ -19,7 +19,7 @@ namespace ScillFactory_Practice.Models.Db
         }
         public User GetByLogin(string login)
         {
-            return Set.FirstOrDefault(x => x.Login == login);
+            return Set.FirstOrDefault(x => x.Email == login);
         }
     }
 }
