@@ -10,9 +10,11 @@ namespace ScillFactory_Practice.Models.Db
         public int UserID { get; set; }
         public User User { get; set; }
         public ICollection<Tag> Tags { get; set; }
+        public ICollection<Comment> Comments { get; set; }
         public Article()
         {
             Tags = new List<Tag>();
+            Comments = new List<Comment>();
         }
     }
 }

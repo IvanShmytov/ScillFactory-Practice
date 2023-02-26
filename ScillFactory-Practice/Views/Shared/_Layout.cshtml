@@ -16,12 +16,21 @@
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Comments" asp-action="Index">Комментарии</a></li>
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Tags" asp-action="Index" >Теги</a></li>
                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">Пользователи</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Users" asp-action="Register" >Роли</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Roles" asp-action="Index" >Роли</a></li>
               </ul>
-            </div>>
-            <div class="col-md-3 text-end">
-                <button type="button" class="btn btn-primary">Выйти</button>
             </div>
+            @if(User.Identity.IsAuthenticated) 
+            {
+                <div class="col-md-3 text-end">
+                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Authenticate">Выйти</a>
+                </div>
+            }
+            else 
+            {
+                <div class="col-md-3 text-end">
+                    <a class="nav-link" asp-area="" asp-controller="Articles" asp-action="Index">Войти</a>
+                </div>
+            }
         </nav>
     </header>
     <div class="container">

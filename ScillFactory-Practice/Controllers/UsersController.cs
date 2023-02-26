@@ -14,22 +14,20 @@ namespace ScillFactory_Practice.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly UserRepository _repo;
+        private readonly IRepository<User> _repo;
 
-        public UsersController(UserRepository repo)
+        public UsersController(IRepository<User> repo)
         {
             _repo = repo;
         }
         [HttpGet]
-        [Route("Authenticate")]
         public IActionResult Authenticate()
         {
             return View();
         }
 
         [HttpPost]
-        [Route("Authenticate")]
-        public async Task<User> Authenticate(string login, string password)
+        public async Task<IActionResult> Authenticate(string login, string password)
         {
             if (String.IsNullOrEmpty(login) ||
               String.IsNullOrEmpty(password))
@@ -41,19 +39,15 @@ namespace ScillFactory_Practice.Controllers
 
             if (user.Password != password)
                 throw new AuthenticationException("Введенный пароль не корректен");
+            List<Claim> userClaims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.Login),
+                            new Claim(ClaimTypes.Role, user.Role)
+                        };
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Roles.FirstOrDefault().Name)
-            };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(
-                claims,
-                "AppCockie",
-                ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-            return user;
+            var identity = new ClaimsIdentity(userClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
+            return View("GetUserByID",user);
         }
         [HttpGet]
         public async Task<IActionResult> Index()
@@ -62,16 +56,12 @@ namespace ScillFactory_Practice.Controllers
             return View(users);
         }
         [HttpGet]
-        public IActionResult GetUserById()
-        {
-            return View();
-        }
-        [HttpPost]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _repo.Get(id);
             return View(user);
         }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -83,29 +73,26 @@ namespace ScillFactory_Practice.Controllers
             await _repo.Add(newUser);
             return View(newUser);
         }
-        [HttpGet]
-        public IActionResult Delete()
-        {
-            return View();
-        }
         [HttpPost]
-        public async Task<IActionResult> Delete (User user)
+        public async Task<IActionResult> Delete(int id)
         {
+            var user = await _repo.Get(id);
             await _repo.Delete(user);
-            return View(user);
+            return RedirectToAction("Index", "Users");
         }
         [Authorize (Roles = "Admin")]
         [HttpGet]
-        [Route("Update")]
-        public IActionResult Update()
+        public async Task<IActionResult> Update(int id)
         {
-            return View();
+            var article = await _repo.Get(id);
+            return View(article);
         }
+
         [HttpPost]
-        public async Task<IActionResult> Update(User user)
+        public async Task<IActionResult> ConfirmUpdating(User user)
         {
             await _repo.Update(user);
-            return View(user);
+            return RedirectToAction("Index", "Users");
         }
     }
 }

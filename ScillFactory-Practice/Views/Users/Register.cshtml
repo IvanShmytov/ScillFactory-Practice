@@ -1,59 +1,41 @@
-﻿@{
-   ViewData["Title"] = "Регистрация нового пользователя.";
+﻿@model ScillFactory_Practice.Models.Db.User
+
+@{
+    ViewData["Title"] = "Register";
 }
- 
-<style>
-     table {
-       border-spacing: 0 15px;
-       align-self: center;
-     }
-     th {
-       background-color: #4287f5;
-       color: white;
-     }
-     th,
-     td {
-       width: 150px;
-       text-align: center;
-       border: none;
-       padding: 5px;
-     }
-     h2 {
-       color: #4287f5;
-     }
-     .submit-button{
-       position: absolute;
-       margin-left: 140px;
-     }
-   </style>
- 
-<div class="text-center">
-   <div>
-      @if (Model == null)
-           {
-               <h3 style="text-align: left">Добро пожаловать в наш блог!</h3>
-               <br>
-              
-               <form method="post">
-                   <table>
-                       <tr>
-                           <td>Имя:</td>
-                           <td><input type="text" name="FirstName" /> </td>
-                       </tr>
-                       <tr>
-                           <td>Фамилия:</td>
-                           <td><input type="text" name="LastName" /></td>
-                       </tr>
-                   </table>
-                   <br>
-                   <div class="submit-button">
-                       <input type="submit"  value="Регистрация" />
-                   </div>
-               </form>
-           }
-           else
-           {
-               @await Html.PartialAsync("_Thanks")
-           }
-      </div>
+
+<div>
+    @if (Model == null)
+        {
+        <form class="frm" method="post" asp-controller="Users" asp-action="Register">
+            <h1 class="h3 mb-3 fw-normal">Регистрация пользователя</h1>
+            <div class="form-floating">
+                <label for="floatingInput">Имя</label>
+                <input asp-for="FirstName" class="form-control" id="floatingInput">
+            </div>
+            <div class="form-floating">
+                <label for="floatingInput">Фамилия</label>
+                <input asp-for="LastName" class="form-control" id="floatingInput">
+            </div>
+            <div class="form-floating">
+                <label for="floatingInput">Адрес эл. почты</label>
+                <input asp-for="Login" class="form-control" id="floatingInput">        
+            </div>
+            <div class="form-floating">
+                <label for="floatingPassword">Пароль</label>
+                <input asp-for="Password" class="form-control" id="floatingPassword">        
+            </div>
+            <div class="form-floating">
+                <label for="floatingPassword">Возраст</label>
+                <input asp-for="Age" class="form-control" id="floatingPassword">
+            </div>
+            <br>
+            <button class="btn-primary" type="submit" padding=30>Зарегистрироваться</button>
+        </form>
+        }
+    else
+    {
+        @await Html.PartialAsync("_Thanks")
+    }
 </div>
+  

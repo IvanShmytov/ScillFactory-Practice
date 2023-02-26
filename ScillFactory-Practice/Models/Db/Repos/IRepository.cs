@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ScillFactory_Practice.Models.Db
@@ -10,5 +11,7 @@ namespace ScillFactory_Practice.Models.Db
         Task Add(T item);
         Task Update(T item);
         Task Delete(T item);
+        User GetByLogin(string login);
+
     }
 }

@@ -6,9 +6,9 @@ namespace ScillFactory_Practice.Controllers
 {
     public class ArticlesController : Controller
     {
-        private readonly ArticlesRepository _repo;
+        private readonly IRepository<Article> _repo;
 
-        public ArticlesController(ArticlesRepository repo)
+        public ArticlesController(IRepository<Article> repo)
         {
             _repo = repo;
         }
@@ -19,48 +19,48 @@ namespace ScillFactory_Practice.Controllers
             return View(articles);
         }
         [HttpGet]
-        public IActionResult GetArticleById()
+        public IActionResult Add()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult GetArticlesById(int id)
-        {
-            var articles = _repo.GetArticlesByAuthorId(id);
-            return View(articles);
-        }
-        [HttpGet]
-        public IActionResult Register()
-        {
-            return View();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Register(Article newArticle)
+        public async Task<IActionResult> Add(Article newArticle)
         {
             await _repo.Add(newArticle);
             return View(newArticle);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetArticleById(int id)
+        {
+            var article = await _repo.Get(id);
+            return View(article);
+        }
+
         [HttpGet]
         public IActionResult Delete()
         {
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Delete(Article article)
+        public async Task<IActionResult> Delete(int id)
         {
+            var article = await _repo.Get(id);
             await _repo.Delete(article);
+            return RedirectToAction("Index", "Articles");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var article = await _repo.Get(id);
             return View(article);
         }
-        [HttpGet]
-        public IActionResult Update()
-        {
-            return View();
-        }
+
         [HttpPost]
-        public async Task<IActionResult> Update(Article article)
+        public async Task<IActionResult> ConfirmUpdating(Article article)
         {
             await _repo.Update(article);
-            return View(article);
+            return RedirectToAction("Index", "Articles");
         }
     }
 }

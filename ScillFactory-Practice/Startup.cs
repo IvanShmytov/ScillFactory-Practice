@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,28 +30,24 @@ namespace ScillFactory_Practice
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<BlogContext>(options => options.UseSqlite(connection))
+            services
+                .AddDbContext<BlogContext>(options => options.UseSqlite(connection))
                 .AddUnitOfWork()
                     .AddCustomRepository<User, UserRepository>()
                     .AddCustomRepository<Article, ArticlesRepository>()
                     .AddCustomRepository<Comment, CommentRepository>()
-                    .AddCustomRepository<Tag, TagRepository>();
+                    .AddCustomRepository<Tag, TagRepository>()
+                    .AddCustomRepository<Role, RoleRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Skillfactory-Practice", Version = "v1" });
             });
 
-            services.AddAuthentication(options => options.DefaultScheme = "Coockies").AddCookie("Coockies", options =>
-            {
-                options.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+              .AddCookie(options => //CookieAuthenticationOptions
                 {
-                    OnRedirectToLogin = redirectContext =>
-                    {
-                        redirectContext.HttpContext.Response.StatusCode = 401;
-                        return Task.CompletedTask;
-                    }
-                };
-            });
+                  options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+              });
             services.AddControllersWithViews();
         }
 
@@ -81,7 +78,7 @@ namespace ScillFactory_Practice
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Users}/{action=Authenticate}/{id?}");
                 
             });
         }

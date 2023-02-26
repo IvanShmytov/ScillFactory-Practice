@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ScillFactory_Practice.Models.Db
 {
     public class Repository<T> : IRepository<T> where T : class
     {
-        protected DbContext _db;
+        protected BlogContext _db;
 
         public DbSet<T> Set { get; private set; }
 
@@ -35,6 +36,7 @@ namespace ScillFactory_Practice.Models.Db
         {
             return await Set.FindAsync(id);
         }
+        
 
         public async Task<IEnumerable<T>> GetAll()
         {
@@ -42,9 +44,14 @@ namespace ScillFactory_Practice.Models.Db
         }
 
         public async Task Update(T item)
-        {
+        {            
             Set.Update(item);
             await _db.SaveChangesAsync();
+        }
+
+        public User GetByLogin(string login)
+        { 
+            return Set.FirstOrDefault(x => (x as User).Login == login) as User;
         }
     }
 }

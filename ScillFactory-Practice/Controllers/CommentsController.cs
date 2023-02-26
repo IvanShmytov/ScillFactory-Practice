@@ -20,11 +20,6 @@ namespace ScillFactory_Practice.Controllers
             return View(comments);
         }
         [HttpGet]
-        public IActionResult GetCommentById()
-        {
-            return View();
-        }
-        [HttpPost]
         public async Task<IActionResult> GetCommentById(int id)
         {
             var comment = await _repo.Get(id);
@@ -41,27 +36,26 @@ namespace ScillFactory_Practice.Controllers
             await _repo.Add(newComment);
             return View(newComment);
         }
-        [HttpGet]
-        public IActionResult Delete()
-        {
-            return View();
-        }
         [HttpPost]
-        public async Task<IActionResult> Delete(Comment comment)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _repo.Delete(comment);
+            var role = await _repo.Get(id);
+            await _repo.Delete(role);
+            return RedirectToAction("Index", "Comments");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(int id)
+        {
+            var comment = await _repo.Get(id);
             return View(comment);
         }
-        [HttpGet]
-        public IActionResult Update()
-        {
-            return View();
-        }
+
         [HttpPost]
-        public async Task<IActionResult> Update(Comment comment)
+        public async Task<IActionResult> ConfirmUpdating(Comment comment)
         {
             await _repo.Update(comment);
-            return View(comment);
+            return RedirectToAction("Index", "Comments");
         }
     }
 }
