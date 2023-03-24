@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ScillFactory_Practice.Extentions;
+using ScillFactory_Practice.Middlewares;
 using ScillFactory_Practice.Models.Db;
 using System;
 using System.Collections.Generic;
@@ -68,17 +69,16 @@ namespace ScillFactory_Practice
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Users}/{action=Authenticate}/{id?}");
+                    pattern: "{controller=Comments}/{action=Update}/{id?}");
                 
             });
         }

@@ -1,8 +1,13 @@
-﻿namespace ScillFactory_Practice.Models.Db
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ScillFactory_Practice.Models.Db
 {
     public class Comment
     {
         public int ID { get; set; }
+        [Required(ErrorMessage = "Поле Текст обязательно для заполнения")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Текст", Prompt = "Введите текст комментария")]
         public string Text { get; set; }
         public int UserID { get; set; }
         public User User { get; set; }
